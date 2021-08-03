@@ -35,6 +35,38 @@ Github Actions workflow configures automatic build of the container whenever som
 
 In addition to the Github Actions workflow, I also added a Dependabot configuration that creates a pull request whenever the gitea/gitea image used as base to build my own image is updated.
 
+To configure Dependabot, browse to your Github repository and go to Insights -> Dependency graph -> Dependabot.
+
+Select Enable Dependabot.
+
+Select Create config file. It creates a file `.github/dependabot.yml`. Add this content to the file.
+
+```yaml
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "daily"
+```
+
+Dependabot will scan the Dockerfile on a daily basis and propose pull requests if it finds updates for the Docker images used as base for build.
+
+After some minutes, __Dependabot__ has created a pull request with the following content
+
+```bash
+# Using Github CLI to list active pull requests 
+gh pr list
+Showing 1 of 1 open pull request in pondichys/gitea-s3backup-docker
+
+#1  Bump gitea/gitea from 1.14.2 to 1.14.5  dependabot/docker/gitea/gitea-1.14.5
+```
+
+You can accept and merge it to update your image with the last version of the official Gitea image.
+
+More info available on [Github Dependabot documentation page](https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates).
+
+
 ## Test the container
 
 1. Run the container locally
