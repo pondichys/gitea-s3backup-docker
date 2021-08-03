@@ -12,9 +12,9 @@ I decided to build my own __Gitea__ image including `s3cmd` tool to copy a file 
 
 The `Dockerfile` is used to build a new container image.
 
-The build is automated through Github Actions workflow defined in directory `.github/workflows/`.
+The build is automated through __Github Actions__ workflow defined in directory `.github/workflows/`.
 
-Dependabot is also configured on the Github repository to update to the latest Gitea image when it's available.
+__Dependabot__ is also configured on the __Github__ repository to update to the latest __Gitea__ image when it's available.
 
 ## Build the image
 
@@ -28,18 +28,18 @@ docker build -t <your image name>:<your tag> .
 
 ### Automated build through Github Actions
 
-Github Actions workflow configures automatic build of the container whenever some events happen in the repository. The workflow is described in file .github/workflows/build-and-push.yaml.
+__Github Actions__ workflow configures automatic build of the container whenever some events happen in the repository. The workflow is described in file `.github/workflows/build-and-push.yaml`.
 
 
 ### Dependabot configuration
 
-In addition to the Github Actions workflow, I also added a Dependabot configuration that creates a pull request whenever the gitea/gitea image used as base to build my own image is updated.
+In addition to the __Github Actions__ workflow, I also added a __Dependabot__ configuration that creates a pull request whenever the `gitea/gitea` image used as base to build my own image is updated.
 
-To configure Dependabot, browse to your Github repository and go to Insights -> Dependency graph -> Dependabot.
+To configure __Dependabot__, browse to your __Github__ repository and go to __Insights__ -> __Dependency graph__ -> __Dependabot__.
 
-Select Enable Dependabot.
+Select __Enable Dependabot__.
 
-Select Create config file. It creates a file `.github/dependabot.yml`. Add this content to the file.
+Select __Create config__ file. It creates a file `.github/dependabot.yml`. Add this content to the file.
 
 ```yaml
 version: 2
@@ -50,7 +50,7 @@ updates:
       interval: "daily"
 ```
 
-Dependabot will scan the Dockerfile on a daily basis and propose pull requests if it finds updates for the Docker images used as base for build.
+__Dependabot__ will scan the `Dockerfile` on a daily basis and propose pull requests if it finds updates for the __Docker__ images used as base for build.
 
 After some minutes, __Dependabot__ has created a pull request with the following content
 
@@ -62,7 +62,7 @@ Showing 1 of 1 open pull request in pondichys/gitea-s3backup-docker
 #1  Bump gitea/gitea from 1.14.2 to 1.14.5  dependabot/docker/gitea/gitea-1.14.5
 ```
 
-You can accept and merge it to update your image with the last version of the official Gitea image.
+You can accept and merge it to update your image with the last version of the official __Gitea__ image.
 
 More info available on [Github Dependabot documentation page](https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates).
 
@@ -75,7 +75,7 @@ More info available on [Github Dependabot documentation page](https://help.githu
 docker container run -d --name gitea -p 3000:3000 -p 2222:22 my-gitea-test:0.1
 ```
 
-2. Configure Gitea using the include sqlite database and create an administrator.
+2. Configure __Gitea__ using the include sqlite database and create an administrator.
 
 3. Create a sample repository.
 
@@ -100,7 +100,7 @@ access_key = <ACCESS_KEY TO INSERT HERE>
 secret_key = <SECRET_KEY TO INSERT HERE>
 ```
 
-6. Create a Gitea dump - this must be run as the user running gitea executable (`git` in this case) and store it to a bucket of Scaleway Object Storage.
+6. Create a __Gitea__ dump - this must be run as the user running gitea executable (`git` in this case) and store it to a bucket of __Scaleway Object Storage__.
 
 ```bash
 su - git
@@ -122,17 +122,17 @@ The backup works ok and the storage to object storage also.
 
 ## How to use the image in Kubernetes
 
-Create a Kubernetes secret with the content of the `.s3cfg` file.
+Create a __Kubernetes__ secret with the content of the `.s3cfg` file.
 
-Adapt some values of the Gitea Helm chart deployment.
+Adapt some values of the __Gitea__ Helm chart deployment.
 
-- Specify your customized Gitea image.
+- Specify your customized __Gitea__ image.
 
 - Add an extra volume and mount the `.s3cfg` secret file.
 
-- Add environment variable `BUCKET_NAME` that contains the name of the S3 compatible object storage bucket where to store the Gitea dump file.
+- Add environment variable `BUCKET_NAME` that contains the name of the __S3__ compatible object storage bucket where to store the __Gitea__ dump file.
 
-Create a Kubernetes Cronjob that runs 
+Create a __Kubernetes Cronjob__ that runs 
 
 ```bash
 kubectl exec gitea -n gitea -- /scripts/gitea-backup.sh
