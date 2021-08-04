@@ -2,9 +2,11 @@ FROM gitea/gitea:1.14.5
 
 LABEL maintainer="sebastien.pondichy@gmail.com"
 
+COPY /scripts /scripts
+
 RUN apk --no-cache add \
     python3 \
     py3-pip \
-    && pip3 install s3cmd
+    && pip3 install s3cmd \
+    && chmod u+x /scripts/gitea-backup.sh
 
-COPY /scripts /scripts
