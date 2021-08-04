@@ -72,7 +72,7 @@ More info available on [Github Dependabot documentation page](https://help.githu
 1. Run the container locally
 
 ```bash
-docker container run -d --name gitea -p 3000:3000 -p 2222:22 my-gitea-test:0.1
+docker container run -d --env BUCKET_NAME=<your bucket for backup> --name gitea -p 3000:3000 -p 2222:22 my-gitea-test:0.3
 ```
 
 2. Configure __Gitea__ using the include sqlite database and create an administrator.
@@ -85,11 +85,10 @@ docker container run -d --name gitea -p 3000:3000 -p 2222:22 my-gitea-test:0.1
 docker container exec -it gitea bash
 ```
 
-5. Create a `.s3cfg` file in the home directory of the `root` user with the following content
+5. Create a `.s3cfg` file in /etc/s3cmd with the following content
 
 ```plaintext
 [default]
-# Object Storage Region FR-PAR
 host_base = s3.fr-par.scw.cloud
 host_bucket = %(bucket)s.s3.fr-par.scw.cloud
 bucket_location = fr-par
@@ -106,7 +105,7 @@ secret_key = <SECRET_KEY TO INSERT HERE>
 su - git
 gitea dump -c /data/gitea/conf/app.ini
 
-s3cmd put gitea-dump-1627901213.zip s3://seblab-k8s-backup
+s3cmd -c /etc/s3cmd/.s3cfg put gitea-dump-1627901213.zip s3://seblab-k8s-backup
 
 s3cmd ls s3://seblab-k8s-backup
 2021-08-02 10:51        63578  s3://seblab-k8s-backup/gitea-dump-1627901213.zip
@@ -122,17 +121,36 @@ The backup works ok and the storage to object storage also.
 
 ## How to use the image in Kubernetes
 
-Create a __Kubernetes__ secret with the content of the `.s3cfg` file.
+1. Create a __Kubernetes__ secret with the content of the `.s3cfg` file.
 
-Adapt some values of the __Gitea__ Helm chart deployment.
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: s3cfg
+type: Opaque
+stringData:
+  .s3cfg: |
+    [default]
+    host_base = <s3 entry point of your object storage>
+    host_bucket = %(bucket)s.<insert same value as host_base here>
+    bucket_location = <location of your S3 object storage bucket>
+    use_https = True
+
+    # Login credentials
+    access_key = <your access key>
+    secret_key = <your secret key>
+```
+
+2. Adapt some values and update the __Gitea__ Helm chart deployment.
 
 - Specify your customized __Gitea__ image.
 
-- Add an extra volume and mount the `.s3cfg` secret file.
+- Add an extra volume and mount the `.s3cfg` secret file in `/etc/s3cmd`
 
 - Add environment variable `BUCKET_NAME` that contains the name of the __S3__ compatible object storage bucket where to store the __Gitea__ dump file.
 
-Create a __Kubernetes Cronjob__ that runs 
+3. Create a __Kubernetes Cronjob__ that runs the backup script.
 
 ```bash
 kubectl exec gitea -n gitea -- /scripts/gitea-backup.sh
