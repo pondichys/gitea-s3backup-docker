@@ -12,13 +12,13 @@ if [[ -z "${BUCKET_NAME}" ]]; then
   exit 1
 fi
 
-echo "\nRunning gitea dump as user git"
+echo "Running gitea dump as user git"
 su - git -c "/app/gitea/gitea dump -c /data/gitea/conf/app.ini --file $GITEA_DUMP_FILE"
 
-echo "\nSending backup file to object storage"
+echo "Sending backup file to object storage"
 s3cmd -c /etc/s3cmd/.s3cfg put $GITEA_DUMP_FILE s3://$BUCKET_NAME
 
-echo "\nCleaning temporary dump files"
+echo "Cleaning temporary dump files"
 rm -f $GITEA_DUMP_FILE
 
-echo "\nBackup complete!"
+echo "Backup complete!"
