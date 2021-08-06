@@ -20,7 +20,7 @@ __Dependabot__ is also configured on the __Github__ repository to update to the 
 
 ### Local build
 
-Clone the repository and run docker build (or equivalent) from the root of the repository.
+Clone the repository and run `docker build` (or equivalent) from the root of the repository.
 
 ```bash
 docker build -t <your image name>:<your tag> .
@@ -150,8 +150,9 @@ stringData:
 
 - Add environment variable `BUCKET_NAME` that contains the name of the __S3__ compatible object storage bucket where to store the __Gitea__ dump file.
 
-3. Create a __Kubernetes Cronjob__ that runs the backup script.
+3. Create a ServiceAccount, a Role and a RoleBinding in gitea namespace so that the backup job has the permissions to run.
 
-```bash
-kubectl exec gitea -n gitea -- /scripts/gitea-backup.sh
-```
+4. Create a __Kubernetes Cronjob__ that runs the backup script.
+
+YAML manifests for steps 3. and 4. are available in folder `k8s-resources/`.
+

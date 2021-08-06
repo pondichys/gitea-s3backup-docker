@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1 # Still running kubernetes 1.20
+kind: CronJob
+metadata:
+  name: gitea-backup
+spec:
+  concurrencyPolicy: Forbid
+  schedule: "30 21 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: gitea-backup
+          containers:
+          - name: gitea-backup
+            image: bitnami/kubectl:1.20
+            imagePullPolicy: IfNotPresent
+            command:
+              - "bin/bash"
+              - "-c"
+              - "kubectl exec gitea-0 -n gitea -- /scripts/gitea-backup.sh"
+          restartPolicy: Never

@@ -1,0 +1,35 @@
+# Create ServiceAccount gitea-backup
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gitea-backup
+  namespace: gitea
+---
+# The role should have permissions to run kubectl exec into the gitea pod.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: gitea
+  name: backup-operator
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+---
+# RoleBinding definition
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: backup
+  namespace: gitea
+subjects:
+- kind: ServiceAccount
+  name: gitea-backup
+  namespace: gitea
+roleRef:
+  kind: Role 
+  name: backup-operator
+  apiGroup: rbac.authorization.k8s.io
