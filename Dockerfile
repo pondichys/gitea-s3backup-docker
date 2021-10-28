@@ -1,4 +1,4 @@
-FROM gitea/gitea:1.15.2
+FROM gitea/gitea:1.15.6
 
 LABEL maintainer="sebastien.pondichy@gmail.com"
 
