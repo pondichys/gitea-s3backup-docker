@@ -27,7 +27,7 @@ jobs:
 
       - name: Print Github event context
         env: 
-          EVENT_CONTEXT: ${toJSON(github.event)}
+          EVENT_CONTEXT: ${{ toJSON(github.event) }}
         run: |
           echo $EVENT_CONTEXT
 
