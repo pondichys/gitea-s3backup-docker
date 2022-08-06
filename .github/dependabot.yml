@@ -1,6 +1,14 @@
 version: 2
 updates:
+  # Maintain dependencies for Docker base image
   - package-ecosystem: "docker"
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+  
+  # Maintain dependencies for Github Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+  
