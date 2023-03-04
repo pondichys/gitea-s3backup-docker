@@ -56,7 +56,7 @@ jobs:
         run: |
           TAG=v$(grep -Eo  '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' Dockerfile)
           TAG_EXISTS=$(git tag --list $TAG)
-          if [[ ! -z TAG_EXISTS ]]; then
+          if [[ -z $TAG_EXISTS ]]; then
             echo "Tag $TAG does not exist. Creating new tag ..."
             git config user.name github-actions
             git config user.email github-actions@github.com
