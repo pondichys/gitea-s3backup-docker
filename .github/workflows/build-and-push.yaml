@@ -25,12 +25,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
 
-      - name: Print Github event context
-        env: 
-          EVENT_CONTEXT: ${{ toJSON(github.event) }}
-        run: |
-          echo $EVENT_CONTEXT
-
       - name: Checkout source code
         uses: actions/checkout@v3
 
