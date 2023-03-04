@@ -1,6 +1,7 @@
 name: gitea-s3backup-docker-build-and-push-on-tag
 
 on:
+  push:
     tags:
       - 'v*'
 
