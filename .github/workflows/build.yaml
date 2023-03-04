@@ -57,13 +57,12 @@ jobs:
           TAG=v$(grep -Eo  '[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+' Dockerfile)
           TAG_EXISTS=$(git tag --list $TAG)
           if [[ -z $TAG_EXISTS ]]; then
-            echo "Tag $TAG does not exist. Creating new tag ..."
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git tag $TAG
-            git push origin $TAG
+            echo "Tag $TAG does not exist. Creating new release..."
+            gh release create "$TAG" --title "$TAG" --notes "Bump Gitea version to $TAG"
           else
             echo "Tag $TAG already exists. Nothing to do."
           fi
         # Setting explicitely the shell also sets options -eo pipefail to fail fast
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
