@@ -50,7 +50,7 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           push: false
 
-      - name: Add git tag 
+      - name: Create release 
         # Should only run when merging to main and not when triggered by pull request
         if: github.event_name != 'pull_request'
         run: |
@@ -64,5 +64,5 @@ jobs:
           fi
         # Setting explicitely the shell also sets options -eo pipefail to fail fast
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GH_TOKEN }}
         shell: bash
