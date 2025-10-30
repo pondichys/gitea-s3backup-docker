@@ -1,4 +1,4 @@
-FROM docker.gitea.com/gitea:1.24.6
+FROM docker.gitea.com/gitea:1.25.0
 
 LABEL maintainer="sebastien.pondichy@gmail.com"
 
