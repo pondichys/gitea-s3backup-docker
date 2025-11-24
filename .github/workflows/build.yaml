@@ -22,7 +22,7 @@ jobs:
 
       - name: Checkout source code
         # Need to use fetch-depth = 0 to fetch all tags
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
