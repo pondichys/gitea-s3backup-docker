@@ -1,5 +1,8 @@
 # gitea-s3backup-docker
 
+> [!IMPORTANT]
+> This repository has been archived and will no longer be maintained. I will keep it online for reference only.
+
 This repository contains the [Dockerfile](./Dockerfile) to build a container based on __Gitea__ official image that includes the `s3cmd` tool to copy a backup file to an __S3__ compatible object storage.
 
 ## Origin
